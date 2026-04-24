@@ -1,38 +1,34 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
-    return view('welcome', [
-        'greeting' => 'Hola ',
-        'person' => request('person', 'Word'),
-        'tasks' => [
-            'Papa',
-            'Zanahoria',
-            'Tomate'
-        ],
-    ]);
-});
-
-Route::get('/ideas', function () {
-    $ideas = session()->get('ideas', []);
-
-    return view('ideas', [
-        'ideas' => $ideas
+    $ventas = DB::table('backpack')->get();
+    dd($ventas);
+    return view('ventas', [
+        'ventas' => $venta,
     ]);
 });
 
 
-Route::post('/ideas/publicar', function () {
-    $idea = request('idea');
-
-    session()->push('ideas', $idea);
-
-    return redirect('/ideas');
+Route::get('/ventas', function () {
+    $ventas = session()->get('ventas', []);
+    return view('ventas', [
+        'ventas' => $ventas,
+    ]);
 });
 
-//Temporal
-Route::get('delete-ideas', function () {
-    session()->forget('ideas');
-    return redirect('/ideas');
+
+Route::post('/ventas', function () {
+    $venta = request('venta');
+    session()->push('ventas', $venta);
+    return redirect('/ventas');
+});
+
+
+Route::get('delete-ventas', function () {
+    session()->forget('ventas');
+    return redirect('/ventas');
 });
