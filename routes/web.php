@@ -1,34 +1,45 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
-
-Route::get('/', function () {
-    $ventas = DB::table('backpack')->get();
-    dd($ventas);
-    return view('ventas', [
-        'ventas' => $venta,
-    ]);
-});
-
+use App\Models\Venta;
 
 Route::get('/ventas', function () {
-    $ventas = session()->get('ventas', []);
+    $ventas = Venta::all();
+
     return view('ventas', [
         'ventas' => $ventas,
     ]);
 });
 
+Route::get('/ventas/{id}', function ($id) {
+    dd($id);
+    $venta = Venta::find($id);
+    return $venta;
+});
 
 Route::post('/ventas', function () {
-    $venta = request('venta');
-    session()->push('ventas', $venta);
+    $data = request()->validate([
+        'venta' => 'required|string',
+        'precio' => 'required|numeric',
+    ]);
+
+    Venta::create([
+        'descripcion' => $data['venta'],
+        'precio' => $data['precio'],
+    ]);
+
     return redirect('/ventas');
 });
 
+Route::get('/ventas', function () {
+    $ventas = Venta::all();
+
+    return view('ventas', [
+        'ventas' => $ventas,
+    ]);
+});
 
 Route::get('delete-ventas', function () {
-    session()->forget('ventas');
+    Venta::truncate();
     return redirect('/ventas');
 });
