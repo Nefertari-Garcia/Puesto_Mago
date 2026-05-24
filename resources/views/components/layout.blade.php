@@ -21,13 +21,13 @@
         }
     </style>
 </head>
-<body class="bg-gray-700 p-6 max-w-xl mx-auto">
-    <nav class="text-amber-50">
+<body class="bg-gray-700 p-6 max-w-xl mx-auto text-white">
+    {{--  <nav class="text-amber-50">
         <a href="/" class="p-1.5">Home</a>
         <a href="/about" class="p-1.5">About us</a>
         <a href="/contact" class="p-1.5">Contact</a>
         <a href="/ideas" class="p-1.5">Ideas</a>
-    </nav>
+    </nav>  --}}
     <main>
         {{$slot}}
     </main>

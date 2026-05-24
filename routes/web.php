@@ -1,45 +1,26 @@
 <?php
 
+use App\Http\Controllers\ventaController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Venta;
+//Index
+Route::get('/ventas', [ventaController::class, 'index']);
 
-Route::get('/ventas', function () {
-    $ventas = Venta::all();
+//Crear
+Route::get('/ventas/create', [ventaController::class, 'create']);
 
-    return view('ventas', [
-        'ventas' => $ventas,
-    ]);
-});
+//store
+Route::post('/ventas', [ventaController::class, 'store']);
 
-Route::get('/ventas/{id}', function ($id) {
-    dd($id);
-    $venta = Venta::find($id);
-    return $venta;
-});
+//Mostrar
+Route::get('/ventas/{venta}', [ventaController::class, 'show']);
 
-Route::post('/ventas', function () {
-    $data = request()->validate([
-        'venta' => 'required|string',
-        'precio' => 'required|numeric',
-    ]);
+//Editar
+Route::get('/ventas/{venta}/edit', [ventaController::class, 'edit']);
 
-    Venta::create([
-        'descripcion' => $data['venta'],
-        'precio' => $data['precio'],
-    ]);
+//Actualizar
+Route::patch('/ventas/{venta}', [ventaController::class, 'update']);
 
-    return redirect('/ventas');
-});
 
-Route::get('/ventas', function () {
-    $ventas = Venta::all();
-
-    return view('ventas', [
-        'ventas' => $ventas,
-    ]);
-});
-
-Route::get('delete-ventas', function () {
-    Venta::truncate();
-    return redirect('/ventas');
-});
+//destroy
+Route::delete('/ventas/{venta}', [ventaController::class, 'destroy']);
