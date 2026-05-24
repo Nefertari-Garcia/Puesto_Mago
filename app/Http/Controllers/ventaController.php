@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreVentaRequest;
 use App\Models\Venta;
 use Illuminate\Http\Request;
 
@@ -30,12 +31,8 @@ class ventaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreVentaRequest $request)
     {
-        request()->validate([
-            'descripcion' => ['required', 'min:5'],
-            'precio' => ['required', 'numeric', 'min:30', 'max:1000']
-        ]);
 
         Venta::create([
             'descripcion' => request('descripcion'),
@@ -68,13 +65,10 @@ class ventaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Venta $venta)
+    public function update(StoreVentaRequest $request, Venta $venta)
     {
-        $venta->update([
-            'descripcion' => request('descripcion'),
-            'precio' => request('precio'),
-        ]);
-        return redirect(("/ventas/{$venta->id}"));
+        $venta->update($request->validated());
+        return redirect("/ventas/{$venta->id}");
     }
 
     /**

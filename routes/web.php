@@ -24,3 +24,7 @@ Route::patch('/ventas/{venta}', [ventaController::class, 'update']);
 
 //destroy
 Route::delete('/ventas/{venta}', [ventaController::class, 'destroy']);
+
+
+Route::get('/register', [RegisteredUserController::class, 'create']);
+Route::get('/register', [RegisteredUserController::class, 'store']);
