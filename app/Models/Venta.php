@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Venta extends Model
 {
@@ -13,5 +14,6 @@ class Venta extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     //protected $guarded = []:
 }

@@ -4,16 +4,16 @@
         <div class="mt-6" >
             <div class="mb-6">
                 <p class="card-title">Descripción</p>
-                <p >{{$ventas->descripcion}}</p>
+                <p >{{$venta->descripcion}}</p>
             </div>
             <div class="mb-6">
                 <p class="card-title">Precio</p>
-                <p >${{number_format($ventas->precio, 2)}}</p>
+                <p >${{number_format($venta->precio, 2)}}</p>
             </div>
         </div>
         
         <div >
-            <a href="/ventas/{{$ventas->id}}/edit" class="btn btn-active btn-primary">
+            <a href="/ventas/{{$venta->id}}/edit" class="btn btn-active btn-primary">
                 Editar
             </a>
         </div>

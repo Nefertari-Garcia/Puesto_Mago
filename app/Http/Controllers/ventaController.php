@@ -6,6 +6,8 @@ use App\Http\Requests\StoreVentaRequest;
 use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 
 class ventaController extends Controller
 {
@@ -14,10 +16,6 @@ class ventaController extends Controller
      */
     public function index()
     {
-        $ventas = Venta::query()->where([
-            'user_id' => Auth::id(),
-        ])->get();
-
         $ventas = Auth::user()->ventas;
 
         return view('ventas.index', [
@@ -38,12 +36,11 @@ class ventaController extends Controller
      */
     public function store(StoreVentaRequest $request)
     {
-
-        Venta::create([
-            'user_id' => Auth::id(),
+        Auth::user()->ventas()->create([
             'descripcion' => request('descripcion'),
             'precio' => request('precio'),
         ]);
+
 
         return redirect('/ventas');
     }
@@ -53,8 +50,9 @@ class ventaController extends Controller
      */
     public function show(Venta $venta)
     {
+        Gate::authorize('view', $venta);
         return view('ventas.show', [
-            'ventas' => $venta,
+            'venta' => $venta,
         ]);
     }
 
@@ -63,8 +61,9 @@ class ventaController extends Controller
      */
     public function edit(Venta $venta)
     {
+        Gate::authorize('update', $venta);
         return view('ventas.edit', [
-            'ventas' => $venta,
+            'venta' => $venta,
         ]);
     }
 
@@ -73,6 +72,7 @@ class ventaController extends Controller
      */
     public function update(StoreVentaRequest $request, Venta $venta)
     {
+        Gate::authorize('update', $venta);
         $venta->update($request->validated());
         return redirect("/ventas/{$venta->id}");
     }
@@ -82,6 +82,7 @@ class ventaController extends Controller
      */
     public function destroy(Venta $venta)
     {
+        Gate::authorize('delete', $venta);
         $venta->delete();
         return redirect('/ventas');
     }

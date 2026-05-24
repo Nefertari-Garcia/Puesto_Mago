@@ -14,7 +14,11 @@ class StoreVentaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return  true;
+        // Solo el propietario puede editar/actualizar
+        if ($this->route('venta')) {
+            return $this->user()->id === $this->route('venta')->user_id;
+        }
+        return true; // Crear es permitido para todos los autenticados
     }
 
     /**
