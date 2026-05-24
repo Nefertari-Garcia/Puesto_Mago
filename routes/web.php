@@ -3,28 +3,42 @@
 use App\Http\Controllers\ventaController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Venta;
-//Index
-Route::get('/ventas', [ventaController::class, 'index']);
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SessionsController;
 
-//Crear
-Route::get('/ventas/create', [ventaController::class, 'create']);
+Route::get('/', function () {
+    return ('Placeholder del inicio de la pagina');
+});
 
-//store
-Route::post('/ventas', [ventaController::class, 'store']);
+Route::middleware('auth')->group(function () {
+    //Index
+    Route::get('/ventas', [ventaController::class, 'index']);
 
-//Mostrar
-Route::get('/ventas/{venta}', [ventaController::class, 'show']);
+    //Crear
+    Route::get('/ventas/create', [ventaController::class, 'create']);
 
-//Editar
-Route::get('/ventas/{venta}/edit', [ventaController::class, 'edit']);
+    //store
+    Route::post('/ventas', [ventaController::class, 'store']);
 
-//Actualizar
-Route::patch('/ventas/{venta}', [ventaController::class, 'update']);
+    //Mostrar
+    Route::get('/ventas/{venta}', [ventaController::class, 'show']);
+
+    //Editar
+    Route::get('/ventas/{venta}/edit', [ventaController::class, 'edit']);
+
+    //Actualizar
+    Route::patch('/ventas/{venta}', [ventaController::class, 'update']);
 
 
-//destroy
-Route::delete('/ventas/{venta}', [ventaController::class, 'destroy']);
+    //destroy
+    Route::delete('/ventas/{venta}', [ventaController::class, 'destroy']);
+    Route::delete('/logout', [SessionsController::class, 'destroy']);
+});
+Route::middleware('guest')->group(function () {
 
-
-// Route::get('/register', [RegisteredUserController::class, 'create']);
-// Route::get('/register', [RegisteredUserController::class, 'store']);
+    // Registro
+    Route::get('/register', [RegisteredUserController::class, 'create']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::get('/login', [SessionsController::class, 'create'])->name('login');
+    Route::post('/login', [SessionsController::class, 'store']);
+});

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVentaRequest;
 use App\Models\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ventaController extends Controller
 {
@@ -13,7 +14,11 @@ class ventaController extends Controller
      */
     public function index()
     {
-        $ventas = Venta::all();
+        $ventas = Venta::query()->where([
+            'user_id' => Auth::id(),
+        ])->get();
+
+        $ventas = Auth::user()->ventas;
 
         return view('ventas.index', [
             'ventas' => $ventas,
@@ -35,6 +40,7 @@ class ventaController extends Controller
     {
 
         Venta::create([
+            'user_id' => Auth::id(),
             'descripcion' => request('descripcion'),
             'precio' => request('precio'),
         ]);
