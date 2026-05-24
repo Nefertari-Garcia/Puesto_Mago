@@ -32,6 +32,11 @@ class ventaController extends Controller
      */
     public function store(Request $request)
     {
+        request()->validate([
+            'descripcion' => ['required', 'min:5'],
+            'precio' => ['required', 'numeric', 'min:30', 'max:1000']
+        ]);
+
         Venta::create([
             'descripcion' => request('descripcion'),
             'precio' => request('precio'),
