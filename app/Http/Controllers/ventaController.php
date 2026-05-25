@@ -51,18 +51,15 @@ class ventaController extends Controller
 
         $venta = Auth::user()->ventas()->create($data);
 
+        // Sincronizar categorías si se seleccionaron
+        if ($request->has('categorias')) {
+            $venta->categorias()->sync($request->categorias);
+        }
+
         // Enviar notificación
         Auth::user()->notify(new VentaPublished($venta));
 
-        return redirect('/ventas');
-    }
-        ]);
-
-        // Enviar notificación
-        Auth::user()
-            ->notify(new VentaPublished($venta));
-
-        return redirect('/ventas');
+        return redirect()->route('ventas.index');
     }
 
     /**
@@ -94,7 +91,7 @@ class ventaController extends Controller
     public function update(StoreVentaRequest $request, Venta $venta)
     {
         Gate::authorize('update', $venta);
-        
+
         $data = $request->validated();
 
         // Si hay nueva imagen, guardarla
@@ -105,10 +102,17 @@ class ventaController extends Controller
             }
             $imagePath = $request->file('image')->store('ventas', 'public');
             $data['image'] = $imagePath;
+        } else {
+            // No reemplazar la imagen si no se subió una nueva
+            unset($data['image']);
         }
 
         $venta->update($data);
-        return redirect("/ventas/{$venta->id}");
+
+        // Sincronizar categorías
+        $venta->categorias()->sync($request->categorias ?? []);
+
+        return redirect()->route('ventas.show', $venta);
     }
 
     /**
@@ -117,13 +121,13 @@ class ventaController extends Controller
     public function destroy(Venta $venta)
     {
         Gate::authorize('delete', $venta);
-        
+
         // Eliminar imagen si existe
         if ($venta->image) {
             Storage::disk('public')->delete($venta->image);
         }
-        
+
         $venta->delete();
-        return redirect('/ventas');
+        return redirect()->route('ventas.index');
     }
 }

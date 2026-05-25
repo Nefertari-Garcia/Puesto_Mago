@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use Database\Factories\VentaFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Venta extends Model
 {
+    /** @use HasFactory<VentaFactory> */
+    use HasFactory, SoftDeletes;
+
     protected $table = 'backpack';
     protected $fillable = ['user_id', 'descripcion', 'precio', 'image'];
 
@@ -16,5 +22,8 @@ class Venta extends Model
         return $this->belongsTo(User::class);
     }
 
-    //protected $guarded = []:
+    public function categorias(): BelongsToMany
+    {
+        return $this->belongsToMany(Categoria::class, 'categoria_venta');
+    }
 }

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property-read Collection<int, Venta> $ventas
  * @method HasMany ventas()
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

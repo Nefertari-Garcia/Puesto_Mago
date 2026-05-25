@@ -37,11 +37,11 @@ class VentaPublished extends Notification
     {
         $url = url('/ventas/' . $this->venta->id);
         return (new MailMessage)
-            ->greeting('Buen dia')
+            ->greeting('Buen día')
             ->line('Has publicado una nueva venta')
-            ->line('$this->venta->descripcion')
-            ->line('$this->venta->precio')
-            ->action('Leido', $url)
+            ->line('Descripción: ' . $this->venta->descripcion)
+            ->line('Precio: $' . number_format($this->venta->precio, 2))
+            ->action('Ver venta', $url)
             ->line('Gracias por usar la app!');
     }
 

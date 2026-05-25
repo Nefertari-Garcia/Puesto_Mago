@@ -17,6 +17,16 @@
                 <p class="card-title">Precio</p>
                 <p >{{ format_price($venta->precio) }}</p>
             </div>
+            @if($venta->categorias->count())
+            <div class="mb-6">
+                <p class="card-title">Categorías</p>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    @foreach($venta->categorias as $categoria)
+                        <span class="badge badge-primary">{{ $categoria->nombre }}</span>
+                    @endforeach
+                </div>
+            </div>
+            @endif
         </div>
         
         <div >
