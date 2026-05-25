@@ -31,6 +31,7 @@ class StoreVentaRequest extends FormRequest
         return [
             'descripcion' => ['required', 'min:5'],
             'precio' => ['required', 'numeric', 'min:30', 'max:1000'],
+            'image' => ['nullable', 'image', 'max:5120'],
         ];
     }
 

@@ -8,8 +8,8 @@
             tabindex="-1"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
 
-                <li><a>Inicio</a></li>
-                <li><a>Nueva venta</a></li>
+                <li><a href="/ventas">Inicio</a></li>
+                <li><a href="/ventas/create">Nueva venta</a></li>
         </ul>
         </div>
         <a class="btn btn-ghost text-xl">Puesto Mago</a>
@@ -18,6 +18,11 @@
         <ul class="menu menu-horizontal px-1">
         <li><a href="/ventas">Inicio</a></li>
         <li><a href="/ventas/create">Nueva venta</a></li>
+        @can('view-admin')
+        
+            <li><a href="/admin">Admin</a></li>
+        @endcan
+        
         </ul>
     </div>
     <div class="navbar-end space-x-2">
@@ -31,6 +36,10 @@
         @else
         <a class="btn btn-primary" href="/register">Registro</a>
         <a class="btn btn-secundary" href="/login">Iniciar sesión</a>
+         @can('view-admin')
+        
+            <li><a href="/admin">Admin</a></li>
+        @endcan
     @endauth
     </div>
     </div>

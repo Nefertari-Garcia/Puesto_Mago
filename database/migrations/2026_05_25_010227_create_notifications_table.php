@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
 
 return new class extends Migration
 {
@@ -12,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('backpack', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-            $table->string('image-path')->nullable();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('backpack');
+        Schema::dropIfExists('notifications');
     }
 };

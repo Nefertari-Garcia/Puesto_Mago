@@ -1,6 +1,6 @@
 <x-layout>
 
-<form method="POST" action="/ventas">
+<form method="POST" action="/ventas" enctype="multipart/form-data">
 @csrf
         <div class="col-span-full">
 
@@ -21,7 +21,12 @@
           <p class="mt-3 text-sm/6 text-gray-400">Ingresa el precio de la venta.</p>
         </div>
 
+        <div class="space-y-2">
+          <label for="image" class="label">Prueba del pago</label>
+          <input type="file" name="image" accept="image/*">
+          <x-error name='image'/> 
         
+        </div>
        
        
 

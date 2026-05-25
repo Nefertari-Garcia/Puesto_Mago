@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @property-read Collection<int, Venta> $ventas
+ * @method HasMany ventas()
  */
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -38,5 +39,10 @@ class User extends Authenticatable
     public function ventas(): HasMany
     {
         return $this->hasMany(Venta::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role == 1;
     }
 }

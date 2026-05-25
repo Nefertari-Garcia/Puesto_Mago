@@ -10,6 +10,7 @@ class VentaPolicy
     /**
      * Determine whether the user can view the venta.
      */
+
     public function view(User $user, Venta $venta): bool
     {
         return $user->id === $venta->user_id;
@@ -20,7 +21,7 @@ class VentaPolicy
      */
     public function update(User $user, Venta $venta): bool
     {
-        return $user->id === $venta->user_id;
+        return $user->is($venta->user);
     }
 
     /**

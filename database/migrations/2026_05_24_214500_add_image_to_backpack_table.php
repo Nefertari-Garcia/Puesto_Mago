@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
 
 return new class extends Migration
 {
@@ -12,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('backpack', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->timestamps();
-            $table->string('image-path')->nullable();
+        Schema::table('backpack', function (Blueprint $table) {
+            $table->string('image')->nullable()->after('precio');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('backpack');
+        Schema::table('backpack', function (Blueprint $table) {
+            $table->dropColumn('image');
+        });
     }
 };

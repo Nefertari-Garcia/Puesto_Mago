@@ -10,6 +10,8 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Venta;
 use App\Policies\VentaPolicy;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Foundation\Auth\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
+
     /**
      * Bootstrap any application services.
      */
@@ -28,8 +31,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Registrar Policy
         Gate::policy(Venta::class, VentaPolicy::class);
-        
+
         $this->configureDefaults();
+        Gate::define('view-admin', function (User $user) {
+            return $user->isAdmin() ? Response::allow() : Response::denyAsNotFound();
+        });
     }
 
     /**
@@ -43,14 +49,15 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
+        Password::defaults(
+            fn(): ?Password => app()->isProduction()
+                ? Password::min(12)
                 ->mixedCase()
                 ->letters()
                 ->numbers()
                 ->symbols()
                 ->uncompromised()
-            : null,
+                : null,
         );
     }
 }

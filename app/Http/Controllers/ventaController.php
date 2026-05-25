@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVentaRequest;
 use App\Models\Venta;
+use App\Notifications\VentaPublished;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 
 class ventaController extends Controller
@@ -36,11 +38,29 @@ class ventaController extends Controller
      */
     public function store(StoreVentaRequest $request)
     {
-        Auth::user()->ventas()->create([
-            'descripcion' => request('descripcion'),
-            'precio' => request('precio'),
+        $data = [
+            'descripcion' => $request->descripcion,
+            'precio' => $request->precio,
+        ];
+
+        // Si hay imagen, guardarla
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('ventas', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $venta = Auth::user()->ventas()->create($data);
+
+        // Enviar notificación
+        Auth::user()->notify(new VentaPublished($venta));
+
+        return redirect('/ventas');
+    }
         ]);
 
+        // Enviar notificación
+        Auth::user()
+            ->notify(new VentaPublished($venta));
 
         return redirect('/ventas');
     }
@@ -51,6 +71,7 @@ class ventaController extends Controller
     public function show(Venta $venta)
     {
         Gate::authorize('view', $venta);
+
         return view('ventas.show', [
             'venta' => $venta,
         ]);
@@ -73,7 +94,20 @@ class ventaController extends Controller
     public function update(StoreVentaRequest $request, Venta $venta)
     {
         Gate::authorize('update', $venta);
-        $venta->update($request->validated());
+        
+        $data = $request->validated();
+
+        // Si hay nueva imagen, guardarla
+        if ($request->hasFile('image')) {
+            // Eliminar imagen antigua si existe
+            if ($venta->image) {
+                Storage::disk('public')->delete($venta->image);
+            }
+            $imagePath = $request->file('image')->store('ventas', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $venta->update($data);
         return redirect("/ventas/{$venta->id}");
     }
 
@@ -83,6 +117,12 @@ class ventaController extends Controller
     public function destroy(Venta $venta)
     {
         Gate::authorize('delete', $venta);
+        
+        // Eliminar imagen si existe
+        if ($venta->image) {
+            Storage::disk('public')->delete($venta->image);
+        }
+        
         $venta->delete();
         return redirect('/ventas');
     }
